@@ -276,4 +276,1525 @@
             margin: 7px 0;
 
             white-space: pre-wrap;
-            overflow-wrap: anywhere
+            overflow-wrap: anywhere;
+
+            line-height: 1.45;
+        }
+
+        .details {
+            color: var(--subtekst);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .verwijder {
+            flex-shrink: 0;
+
+            padding: 7px 9px;
+
+            color: var(--rood);
+            background: var(--rood-licht);
+
+            border: 0;
+            border-radius: 9px;
+
+            cursor: pointer;
+        }
+
+        .leeg {
+            padding: 20px 5px 8px;
+
+            color: var(--subtekst);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .hulpmiddelen {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+
+            margin-top: 15px;
+        }
+
+        .secundair {
+            min-height: 46px;
+
+            padding: 10px;
+
+            font: inherit;
+            font-weight: 700;
+
+            color: var(--groen-donker);
+            background: var(--groen-licht);
+
+            border: 0;
+            border-radius: 11px;
+
+            cursor: pointer;
+        }
+
+        .gevaar {
+            color: var(--rood);
+            background: var(--rood-licht);
+        }
+
+        .privacy {
+            color: var(--subtekst);
+
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+
+            .datum-tijd {
+                grid-template-columns: 1fr;
+            }
+
+            .timer-keuzes {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .hulpmiddelen {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+
+            :root {
+                color-scheme: dark;
+
+                --achtergrond: #111813;
+                --kaart: #1c261f;
+                --tekst: #edf5ef;
+                --subtekst: #aab7ae;
+
+                --groen: #348b59;
+                --groen-donker: #8bd1a4;
+                --groen-licht: #253a2c;
+
+                --rand: #46554a;
+
+                --rood: #ff9188;
+                --rood-licht: #412522;
+
+                --schaduw: none;
+            }
+
+            select,
+            textarea,
+            input {
+                background: #172019;
+            }
+
+            .timer-knop {
+                color: var(--tekst);
+                background: #172019;
+            }
+
+            .registratie {
+                border-color: #344138;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="app">
+
+    <h1>🍽️ Mijn eetdagboek</h1>
+
+    <p class="ondertitel">
+        Je eetgegevens worden lokaal op dit apparaat opgeslagen.
+    </p>
+
+
+    <!-- INVOER -->
+
+    <section class="kaart">
+
+        <h2>Nieuw eetmoment</h2>
+
+        <form id="formulier">
+
+            <label for="soort">
+                Eetmoment
+            </label>
+
+            <select id="soort">
+
+                <option value="Ontbijt">
+                    Ontbijt
+                </option>
+
+                <option value="Lunch">
+                    Lunch
+                </option>
+
+                <option value="Avondeten">
+                    Avondeten
+                </option>
+
+                <option value="Nachtsnack">
+                    Nachtsnack
+                </option>
+
+                <option value="Snack">
+                    Snack
+                </option>
+
+            </select>
+
+
+            <label for="eten">
+                Wat heb je gegeten?
+            </label>
+
+            <textarea
+                id="eten"
+                maxlength="750"
+                placeholder="Bijvoorbeeld: twee boterhammen met kaas"
+                required
+            ></textarea>
+
+
+            <div class="datum-tijd">
+
+                <div>
+
+                    <label for="datum">
+                        Datum
+                    </label>
+
+                    <input
+                        id="datum"
+                        type="date"
+                        required
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label for="tijd">
+                        Tijdstip
+                    </label>
+
+                    <input
+                        id="tijd"
+                        type="time"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="label">
+                Start iPhone-timer na
+            </div>
+
+
+            <div
+                class="timer-keuzes"
+                role="group"
+                aria-label="Kies timerduur"
+            >
+
+                <button
+                    type="button"
+                    class="timer-knop actief"
+                    data-minuten="0"
+                >
+                    Geen
+                </button>
+
+
+                <button
+                    type="button"
+                    class="timer-knop"
+                    data-minuten="60"
+                >
+                    1 uur
+                </button>
+
+
+                <button
+                    type="button"
+                    class="timer-knop"
+                    data-minuten="90"
+                >
+                    1,5 uur
+                </button>
+
+
+                <button
+                    type="button"
+                    class="timer-knop"
+                    data-minuten="120"
+                >
+                    2 uur
+                </button>
+
+            </div>
+
+
+            <div class="timer-info">
+                Kies je een timer, dan wordt na het opslaan de
+                iPhone-opdracht <strong>Eetdagboek Timer</strong>
+                gestart.
+            </div>
+
+
+            <button
+                class="opslaan"
+                type="submit"
+            >
+                Eetmoment opslaan
+            </button>
+
+
+            <div
+                id="melding"
+                class="melding"
+                aria-live="polite"
+            ></div>
+
+        </form>
+
+    </section>
+
+
+    <!-- OVERZICHT -->
+
+    <section class="kaart">
+
+        <div class="kopregel">
+
+            <h2>
+                Eetmomenten
+            </h2>
+
+            <span
+                id="aantal"
+                class="aantal"
+            ></span>
+
+        </div>
+
+
+        <div id="lijst"></div>
+
+
+        <div class="hulpmiddelen">
+
+            <button
+                id="exporteer"
+                class="secundair"
+                type="button"
+            >
+                Exporteer back-up
+            </button>
+
+
+            <button
+                id="wis"
+                class="secundair gevaar"
+                type="button"
+            >
+                Wis alles
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <p class="privacy">
+        🔒 Alle eetgegevens worden lokaal in deze browser bewaard.
+        De GitHub Pages-site ontvangt deze gegevens niet.
+    </p>
+
+</main>
+
+
+<script>
+"use strict";
+
+(() => {
+
+    /*
+    ------------------------------------------------------------
+    INSTELLINGEN
+    ------------------------------------------------------------
+    */
+
+    const OPSLAG_SLEUTEL = "eetdagboek_v3";
+
+    const OPDRACHT_NAAM = "Eetdagboek Timer";
+
+
+    /*
+    ------------------------------------------------------------
+    ELEMENTEN
+    ------------------------------------------------------------
+    */
+
+    const formulier =
+        document.getElementById("formulier");
+
+    const soortVeld =
+        document.getElementById("soort");
+
+    const etenVeld =
+        document.getElementById("eten");
+
+    const datumVeld =
+        document.getElementById("datum");
+
+    const tijdVeld =
+        document.getElementById("tijd");
+
+    const lijst =
+        document.getElementById("lijst");
+
+    const melding =
+        document.getElementById("melding");
+
+    const aantal =
+        document.getElementById("aantal");
+
+    const exporteerKnop =
+        document.getElementById("exporteer");
+
+    const wisKnop =
+        document.getElementById("wis");
+
+    const timerKnoppen =
+        Array.from(
+            document.querySelectorAll(".timer-knop")
+        );
+
+
+    /*
+    ------------------------------------------------------------
+    VARIABELEN
+    ------------------------------------------------------------
+    */
+
+    let timerMinuten = 0;
+
+    let registraties = laadGegevens();
+
+
+    /*
+    ------------------------------------------------------------
+    HULPFUNCTIES
+    ------------------------------------------------------------
+    */
+
+    function tweeCijfers(getal) {
+
+        return String(getal).padStart(2, "0");
+
+    }
+
+
+    function lokaleDatum(datum) {
+
+        return (
+            datum.getFullYear() +
+            "-" +
+            tweeCijfers(datum.getMonth() + 1) +
+            "-" +
+            tweeCijfers(datum.getDate())
+        );
+
+    }
+
+
+    function lokaleTijd(datum) {
+
+        return (
+            tweeCijfers(datum.getHours()) +
+            ":" +
+            tweeCijfers(datum.getMinutes())
+        );
+
+    }
+
+
+    function zetDatumTijdOpNu() {
+
+        const nu = new Date();
+
+        datumVeld.value = lokaleDatum(nu);
+
+        tijdVeld.value = lokaleTijd(nu);
+
+    }
+
+
+    function maakEetTijdstip(
+        datum,
+        tijd
+    ) {
+
+        return new Date(
+            datum + "T" + tijd + ":00"
+        );
+
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    LOKALE OPSLAG
+    ------------------------------------------------------------
+    */
+
+    function laadGegevens() {
+
+        try {
+
+            const inhoud =
+                localStorage.getItem(OPSLAG_SLEUTEL);
+
+            if (!inhoud) {
+
+                return [];
+
+            }
+
+            const gegevens =
+                JSON.parse(inhoud);
+
+            if (Array.isArray(gegevens)) {
+
+                return gegevens;
+
+            }
+
+            return [];
+
+        }
+        catch (fout) {
+
+            console.error(
+                "Gegevens laden mislukt",
+                fout
+            );
+
+            return [];
+
+        }
+
+    }
+
+
+    function bewaarGegevens() {
+
+        try {
+
+            localStorage.setItem(
+                OPSLAG_SLEUTEL,
+                JSON.stringify(registraties)
+            );
+
+            return true;
+
+        }
+        catch (fout) {
+
+            console.error(
+                "Opslaan mislukt",
+                fout
+            );
+
+            toonMelding(
+                "Opslaan is mislukt."
+            );
+
+            return false;
+
+        }
+
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    MELDING
+    ------------------------------------------------------------
+    */
+
+    function toonMelding(tekst) {
+
+        melding.textContent = tekst;
+
+        melding.classList.add(
+            "zichtbaar"
+        );
+
+        clearTimeout(
+            toonMelding.timer
+        );
+
+        toonMelding.timer =
+            setTimeout(() => {
+
+                melding.classList.remove(
+                    "zichtbaar"
+                );
+
+            }, 4000);
+
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    TIMERKEUZE
+    ------------------------------------------------------------
+    */
+
+    timerKnoppen.forEach(
+        (knop) => {
+
+            knop.addEventListener(
+                "click",
+                () => {
+
+                    timerMinuten =
+                        Number(
+                            knop.dataset.minuten
+                        );
+
+                    timerKnoppen.forEach(
+                        (andereKnop) => {
+
+                            andereKnop
+                                .classList
+                                .toggle(
+                                    "actief",
+                                    andereKnop === knop
+                                );
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    function resetTimerKeuze() {
+
+        timerMinuten = 0;
+
+        timerKnoppen.forEach(
+            (knop) => {
+
+                knop.classList.toggle(
+                    "actief",
+                    Number(
+                        knop.dataset.minuten
+                    ) === 0
+                );
+
+            }
+        );
+
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    APPLE OPDRACHT STARTEN
+    ------------------------------------------------------------
+    */
+
+    function startAppleTimer(minuten) {
+
+        if (minuten <= 0) {
+
+            return;
+
+        }
+
+        /*
+        De gekozen minuten worden als tekst naar
+        de opdracht 'Eetdagboek Timer' gestuurd.
+
+        Bijvoorbeeld:
+        60
+        90
+        120
+        */
+
+        const url =
+
+            "shortcuts://run-shortcut" +
+
+            "?name=" +
+
+            encodeURIComponent(
+                OPDRACHT_NAAM
+            ) +
+
+            "&input=text" +
+
+            "&text=" +
+
+            encodeURIComponent(
+                String(minuten)
+            );
+
+
+        window.location.href = url;
+
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    NIEUWE REGISTRATIE
+    ------------------------------------------------------------
+    */
+
+    formulier.addEventListener(
+        "submit",
+        (event) => {
+
+            event.preventDefault();
+
+
+            const eten =
+                etenVeld.value.trim();
+
+            const datum =
+                datumVeld.value;
+
+            const tijd =
+                tijdVeld.value;
+
+
+            if (!eten) {
+
+                toonMelding(
+                    "Vul eerst in wat je hebt gegeten."
+                );
+
+                etenVeld.focus();
+
+                return;
+
+            }
+
+
+            if (!datum || !tijd) {
+
+                toonMelding(
+                    "Vul een datum en tijdstip in."
+                );
+
+                return;
+
+            }
+
+
+            const eetTijdstip =
+                maakEetTijdstip(
+                    datum,
+                    tijd
+                );
+
+
+            if (
+                Number.isNaN(
+                    eetTijdstip.getTime()
+                )
+            ) {
+
+                toonMelding(
+                    "De datum of tijd is ongeldig."
+                );
+
+                return;
+
+            }
+
+
+            const gekozenTimer =
+                timerMinuten;
+
+
+            const registratie = {
+
+                id:
+                    Date.now().toString() +
+                    "-" +
+                    Math.random()
+                        .toString(36)
+                        .slice(2),
+
+                soort:
+                    soortVeld.value,
+
+                eten:
+                    eten,
+
+                /*
+                BELANGRIJK:
+
+                gegetenOp bepaalt de volgorde
+                in het overzicht.
+                */
+
+                gegetenOp:
+                    eetTijdstip.toISOString(),
+
+                /*
+                opgeslagenOp is alleen de
+                daadwerkelijke timestamp
+                waarop je op Opslaan drukte.
+                */
+
+                opgeslagenOp:
+                    new Date().toISOString(),
+
+                timerMinuten:
+                    gekozenTimer
+
+            };
+
+
+            registraties.push(
+                registratie
+            );
+
+
+            if (!bewaarGegevens()) {
+
+                registraties =
+                    registraties.filter(
+                        (item) =>
+                            item.id !== registratie.id
+                    );
+
+                return;
+
+            }
+
+
+            renderOverzicht();
+
+
+            etenVeld.value = "";
+
+            zetDatumTijdOpNu();
+
+            resetTimerKeuze();
+
+
+            if (gekozenTimer > 0) {
+
+                toonMelding(
+                    "Eetmoment opgeslagen. " +
+                    "De iPhone-timer wordt gestart."
+                );
+
+
+                /*
+                Kleine vertraging zodat de lokale
+                opslag eerst volledig klaar is.
+                */
+
+                setTimeout(
+                    () => {
+
+                        startAppleTimer(
+                            gekozenTimer
+                        );
+
+                    },
+                    300
+                );
+
+            }
+            else {
+
+                toonMelding(
+                    "Eetmoment is opgeslagen."
+                );
+
+            }
+
+        }
+    );
+
+
+    /*
+    ------------------------------------------------------------
+    DATUMWEERGAVE
+    ------------------------------------------------------------
+    */
+
+    function datumKop(isoDatum) {
+
+        const datum =
+            new Date(isoDatum);
+
+        const vandaag =
+            new Date();
+
+        const gisteren =
+            new Date();
+
+        gisteren.setDate(
+            gisteren.getDate() - 1
+        );
+
+
+        if (
+            lokaleDatum(datum) ===
+            lokaleDatum(vandaag)
+        ) {
+
+            return "Vandaag";
+
+        }
+
+
+        if (
+            lokaleDatum(datum) ===
+            lokaleDatum(gisteren)
+        ) {
+
+            return "Gisteren";
+
+        }
+
+
+        return new Intl.DateTimeFormat(
+            "nl-NL",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
+        ).format(datum);
+
+    }
+
+
+    function tijdTekst(isoDatum) {
+
+        return new Intl.DateTimeFormat(
+            "nl-NL",
+            {
+                hour: "2-digit",
+                minute: "2-digit"
+            }
+        ).format(
+            new Date(isoDatum)
+        );
+
+    }
+
+
+    function timestampTekst(isoDatum) {
+
+        return new Intl.DateTimeFormat(
+            "nl-NL",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+            }
+        ).format(
+            new Date(isoDatum)
+        );
+
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    OVERZICHT
+    ------------------------------------------------------------
+    */
+
+    function renderOverzicht() {
+
+        lijst.replaceChildren();
+
+
+        aantal.textContent =
+            registraties.length +
+            (
+                registraties.length === 1
+                    ? " registratie"
+                    : " registraties"
+            );
+
+
+        if (
+            registraties.length === 0
+        ) {
+
+            const leeg =
+                document.createElement(
+                    "div"
+                );
+
+            leeg.className =
+                "leeg";
+
+            leeg.textContent =
+                "Nog geen eetmomenten opgeslagen.";
+
+            lijst.appendChild(
+                leeg
+            );
+
+            return;
+
+        }
+
+
+        /*
+        ========================================================
+
+        HIER ZIT DE BELANGRIJKE AANPASSING.
+
+        Er wordt NIET gesorteerd op opgeslagenOp.
+
+        Er wordt gesorteerd op gegetenOp.
+
+        Daardoor komt een gisteren ingevoerde lunch
+        automatisch op de juiste plek terecht.
+
+        Nieuwste eetmoment staat bovenaan.
+
+        ========================================================
+        */
+
+        const gesorteerd =
+            registraties
+                .slice()
+                .sort(
+                    (a, b) =>
+
+                        new Date(
+                            b.gegetenOp
+                        ).getTime()
+
+                        -
+
+                        new Date(
+                            a.gegetenOp
+                        ).getTime()
+                );
+
+
+        let huidigeDag = "";
+
+
+        gesorteerd.forEach(
+            (registratie) => {
+
+                const dagSleutel =
+                    lokaleDatum(
+                        new Date(
+                            registratie.gegetenOp
+                        )
+                    );
+
+
+                if (
+                    dagSleutel !== huidigeDag
+                ) {
+
+                    huidigeDag =
+                        dagSleutel;
+
+
+                    const daggroep =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    daggroep.className =
+                        "daggroep";
+
+
+                    const dagtitel =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    dagtitel.className =
+                        "dagtitel";
+
+
+                    dagtitel.textContent =
+                        datumKop(
+                            registratie.gegetenOp
+                        );
+
+
+                    daggroep.appendChild(
+                        dagtitel
+                    );
+
+
+                    lijst.appendChild(
+                        daggroep
+                    );
+
+                }
+
+
+                const artikel =
+                    document.createElement(
+                        "article"
+                    );
+
+
+                artikel.className =
+                    "registratie";
+
+
+                const kop =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                kop.className =
+                    "registratie-kop";
+
+
+                const titel =
+                    document.createElement(
+                        "h3"
+                    );
+
+
+                titel.textContent =
+
+                    registratie.soort +
+
+                    " · " +
+
+                    tijdTekst(
+                        registratie.gegetenOp
+                    );
+
+
+                const verwijder =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                verwijder.type =
+                    "button";
+
+
+                verwijder.className =
+                    "verwijder";
+
+
+                verwijder.textContent =
+                    "Verwijder";
+
+
+                verwijder.addEventListener(
+                    "click",
+                    () => {
+
+                        verwijderRegistratie(
+                            registratie.id
+                        );
+
+                    }
+                );
+
+
+                kop.appendChild(
+                    titel
+                );
+
+
+                kop.appendChild(
+                    verwijder
+                );
+
+
+                const eten =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                eten.className =
+                    "eten";
+
+
+                eten.textContent =
+                    registratie.eten;
+
+
+                const details =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                details.className =
+                    "details";
+
+
+                let timerTekst =
+                    "Geen timer";
+
+
+                if (
+                    registratie.timerMinuten === 60
+                ) {
+
+                    timerTekst =
+                        "Timer: 1 uur";
+
+                }
+
+
+                if (
+                    registratie.timerMinuten === 90
+                ) {
+
+                    timerTekst =
+                        "Timer: 1,5 uur";
+
+                }
+
+
+                if (
+                    registratie.timerMinuten === 120
+                ) {
+
+                    timerTekst =
+                        "Timer: 2 uur";
+
+                }
+
+
+                details.innerHTML =
+
+                    timerTekst +
+
+                    "<br>" +
+
+                    "Ingevoerd: " +
+
+                    timestampTekst(
+                        registratie.opgeslagenOp
+                    );
+
+
+                artikel.appendChild(
+                    kop
+                );
+
+
+                artikel.appendChild(
+                    eten
+                );
+
+
+                artikel.appendChild(
+                    details
+                );
+
+
+                lijst.appendChild(
+                    artikel
+                );
+
+            }
+        );
+
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    VERWIJDEREN
+    ------------------------------------------------------------
+    */
+
+    function verwijderRegistratie(id) {
+
+        const registratie =
+            registraties.find(
+                (item) =>
+                    item.id === id
+            );
+
+
+        if (!registratie) {
+
+            return;
+
+        }
+
+
+        const akkoord =
+            window.confirm(
+
+                "Dit eetmoment verwijderen?\n\n" +
+
+                registratie.soort +
+
+                ": " +
+
+                registratie.eten
+            );
+
+
+        if (!akkoord) {
+
+            return;
+
+        }
+
+
+        registraties =
+            registraties.filter(
+                (item) =>
+                    item.id !== id
+            );
+
+
+        bewaarGegevens();
+
+        renderOverzicht();
+
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    ALLES WISSEN
+    ------------------------------------------------------------
+    */
+
+    wisKnop.addEventListener(
+        "click",
+        () => {
+
+            if (
+                registraties.length === 0
+            ) {
+
+                toonMelding(
+                    "Er zijn geen gegevens om te wissen."
+                );
+
+                return;
+
+            }
+
+
+            const akkoord =
+                window.confirm(
+
+                    "Weet je zeker dat je ALLE " +
+
+                    "eetmomenten wilt wissen?\n\n" +
+
+                    "Dit kan niet ongedaan worden gemaakt."
+                );
+
+
+            if (!akkoord) {
+
+                return;
+
+            }
+
+
+            registraties = [];
+
+
+            localStorage.removeItem(
+                OPSLAG_SLEUTEL
+            );
+
+
+            renderOverzicht();
+
+
+            toonMelding(
+                "Alle gegevens zijn gewist."
+            );
+
+        }
+    );
+
+
+    /*
+    ------------------------------------------------------------
+    EXPORTEREN
+    ------------------------------------------------------------
+    */
+
+    exporteerKnop.addEventListener(
+        "click",
+        () => {
+
+            if (
+                registraties.length === 0
+            ) {
+
+                toonMelding(
+                    "Er zijn nog geen gegevens om te exporteren."
+                );
+
+                return;
+
+            }
+
+
+            /*
+            Ook in de back-up worden de gegevens
+            chronologisch opgeslagen.
+            */
+
+            const gegevens =
+                registraties
+                    .slice()
+                    .sort(
+                        (a, b) =>
+
+                            new Date(
+                                b.gegetenOp
+                            ).getTime()
+
+                            -
+
+                            new Date(
+                                a.gegetenOp
+                            ).getTime()
+                    );
+
+
+            const inhoud =
+                JSON.stringify(
+                    gegevens,
+                    null,
+                    2
+                );
+
+
+            const bestand =
+                new Blob(
+                    [inhoud],
+                    {
+                        type:
+                            "application/json;charset=utf-8"
+                    }
+                );
+
+
+            const url =
+                URL.createObjectURL(
+                    bestand
+                );
+
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+
+            link.href =
+                url;
+
+
+            link.download =
+
+                "eetdagboek-" +
+
+                lokaleDatum(
+                    new Date()
+                ) +
+
+                ".json";
+
+
+            document.body.appendChild(
+                link
+            );
+
+
+            link.click();
+
+
+            link.remove();
+
+
+            setTimeout(
+                () => {
+
+                    URL.revokeObjectURL(
+                        url
+                    );
+
+                },
+                1000
+            );
+
+
+            toonMelding(
+                "Back-up aangemaakt."
+            );
+
+        }
+    );
+
+
+    /*
+    ------------------------------------------------------------
+    START
+    ------------------------------------------------------------
+    */
+
+    zetDatumTijdOpNu();
+
+    resetTimerKeuze();
+
+    renderOverzicht();
+
+})();
+</script>
+
+</body>
+</html>
