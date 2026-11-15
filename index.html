@@ -1,913 +1,279 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#176b42">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Eetdagboek">
-<title>Eetdagboek</title>
-
-<style>
-:root{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    color:#17221b;
-    background:#f1f5f2;
-}
-
-*{box-sizing:border-box}
-
-body{margin:0}
-
-.app{
-    max-width:650px;
-    margin:auto;
-    padding:
-        calc(18px + env(safe-area-inset-top))
-        14px
-        calc(30px + env(safe-area-inset-bottom));
-}
-
-h1{
-    margin:4px 0 5px;
-    font-size:31px;
-}
-
-p.sub{
-    margin:0 0 16px;
-    color:#657168;
-}
-
-.card{
-    background:#fff;
-    border-radius:20px;
-    padding:17px;
-    margin:13px 0;
-    box-shadow:0 4px 18px #193b2512;
-}
-
-label,
-.label{
-    display:block;
-    font-weight:700;
-    margin:14px 0 7px;
-}
-
-select,
-textarea,
-input{
-    width:100%;
-    font:inherit;
-    padding:12px;
-    border:1px solid #c7d3ca;
-    border-radius:12px;
-    background:#fff;
-    color:#17221b;
-}
-
-textarea{
-    min-height:92px;
-    resize:vertical;
-}
-
-.row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-
-.alarms{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:7px;
-}
-
-.alarms button,
-.secondary{
-    border:1px solid #c7d3ca;
-    background:#f7faf8;
-    border-radius:11px;
-    padding:11px 5px;
-    font:inherit;
-}
-
-.alarms button.on{
-    background:#176b42;
-    color:white;
-    border-color:#176b42;
-}
-
-.save{
-    width:100%;
-    border:0;
-    border-radius:13px;
-    margin-top:18px;
-    padding:14px;
-    background:#176b42;
-    color:#fff;
-    font:inherit;
-    font-weight:750;
-}
-
-.msg{
-    display:none;
-    margin-top:12px;
-    padding:11px;
-    border-radius:11px;
-    background:#e7f3eb;
-    color:#155d38;
-}
-
-.msg.show{
-    display:block;
-}
-
-.top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-}
-
-.badge{
-    font-size:13px;
-    color:#647168;
-}
-
-/* Overzicht eerder gegeten */
-
-.entry{
-    padding:13px 0;
-    border-top:1px solid #e2e9e4;
-}
-
-.entry:first-child{
-    border-top:0;
-}
-
-.entry h3{
-    margin:0 0 5px;
-    font-size:17px;
-}
-
-.food{
-    white-space:pre-wrap;
-    margin:5px 0;
-}
-
-.meta{
-    color:#667269;
-    font-size:14px;
-    line-height:1.5;
-}
-
-.delete{
-    border:0;
-    background:#fff0ef;
-    color:#a52a21;
-    border-radius:9px;
-    padding:7px 9px;
-}
-
-.empty{
-    text-align:center;
-    color:#718077;
-    padding:18px;
-}
-
-.actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    margin-top:12px;
-}
-
-.danger{
-    color:#a52a21;
-    background:#fff0ef;
-    border-color:#f2c9c5;
-}
-
-.privacy{
-    text-align:center;
-    color:#6b776f;
-    font-size:13px;
-}
-
-@media(max-width:480px){
-
-    .alarms{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .row{
-        grid-template-columns:1fr;
-    }
-}
-
-@media(prefers-color-scheme:dark){
-
-    :root{
-        color:#edf5ef;
-        background:#111813;
-    }
-
-    .card{
-        background:#1c261f;
-    }
-
-    select,
-    textarea,
-    input{
-        background:#172019;
-        color:#edf5ef;
-        border-color:#46544a;
-    }
-
-    .alarms button,
-    .secondary{
-        background:#172019;
-        color:#edf5ef;
-        border-color:#46544a;
-    }
-
-    .entry{
-        border-color:#334138;
-    }
-
-    .msg{
-        background:#253a2c;
-        color:#a8e1ba;
-    }
-}
-</style>
-</head>
-
-<body>
-
-<main class="app">
-
-<h1>🍽️ Mijn eetdagboek</h1>
-
-<p class="sub">
-    Je invoer wordt lokaal op deze iPhone bewaard.
-</p>
-
-
-<!-- INVULFORMULIER -->
-
-<section class="card">
-
-<h2>Nieuw eetmoment</h2>
-
-<form id="form">
-
-<label for="kind">Eetmoment</label>
-
-<select id="kind">
-    <option>Ontbijt</option>
-    <option>Lunch</option>
-    <option>Avondeten</option>
-    <option>Nachtsnack</option>
-    <option>Snack</option>
-</select>
-
-
-<label for="food">Wat heb je gegeten?</label>
-
-<textarea
-    id="food"
-    required
-    placeholder="Bijvoorbeeld: twee boterhammen met kaas">
-</textarea>
-
-
-<div class="row">
-
-<div>
-
-<label for="date">Datum</label>
-
-<input
-    id="date"
-    type="date"
-    required>
-
-</div>
-
-
-<div>
-
-<label for="time">Tijdstip</label>
-
-<input
-    id="time"
-    type="time"
-    step="60"
-    required>
-
-</div>
-
-</div>
-
-
-<div class="label">
-Herinnering na
-</div>
-
-
-<div class="alarms">
-
-<button
-    type="button"
-    data-min="0"
-    class="on">
-    Geen
-</button>
-
-<button
-    type="button"
-    data-min="60">
-    1 uur
-</button>
-
-<button
-    type="button"
-    data-min="90">
-    1,5 uur
-</button>
-
-<button
-    type="button"
-    data-min="120">
-    2 uur
-</button>
-
-</div>
-
-
-<button
-    class="save"
-    type="submit">
-    Eetmoment opslaan
-</button>
-
-
-<div
-    id="msg"
-    class="msg"
-    aria-live="polite">
-</div>
-
-</form>
-
-</section>
-
-
-
-<!-- DIRECT OVERZICHT -->
-
-<section class="card">
-
-<div class="top">
-
-<h2>Eerder gegeten</h2>
-
-<span
-    id="count"
-    class="badge">
-</span>
-
-</div>
-
-
-<div id="list"></div>
-
-
-<div class="actions">
-
-<button
-    id="export"
-    type="button"
-    class="secondary">
-    Exporteer back-up
-</button>
-
-
-<button
-    id="clear"
-    type="button"
-    class="secondary danger">
-    Wis alles
-</button>
-
-</div>
-
-</section>
-
-
-<p class="privacy">
-🔒 Je eetgegevens worden alleen lokaal op dit apparaat opgeslagen.
-</p>
-
-</main>
-
-
-
-<script>
-
-(() => {
-
-"use strict";
-
-
-const KEY = "eetdagboek_v2";
-
-
-const $ = s => document.querySelector(s);
-
-
-const form  = $("#form");
-const kind  = $("#kind");
-const food  = $("#food");
-const date  = $("#date");
-const time  = $("#time");
-
-const list  = $("#list");
-const msg   = $("#msg");
-const count = $("#count");
-
-
-let alarm = 0;
-
-let data = load();
-
-
-
-/* DATUM EN TIJD */
-
-function pad(n){
-
-    return String(n).padStart(2,"0");
-
-}
-
-
-function localDate(d){
-
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-
-}
-
-
-function localTime(d){
-
-    return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
-
-}
-
-
-function resetDateTime(){
-
-    const nu = new Date();
-
-    date.value = localDate(nu);
-    time.value = localTime(nu);
-
-}
-
-
-
-/* OPSLAG */
-
-function load(){
-
-    try{
-
-        return JSON.parse(
-            localStorage.getItem(KEY) || "[]"
-        );
-
-    }catch{
-
-        return [];
-
-    }
-
-}
-
-
-function persist(){
-
-    localStorage.setItem(
-        KEY,
-        JSON.stringify(data)
-    );
-
-}
-
-
-
-/* WEERGAVE DATUM */
-
-function eatMomentNL(x){
-
-    return new Intl.DateTimeFormat(
-        "nl-NL",
-        {
-            dateStyle:"short",
-            timeStyle:"short"
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta name="theme-color" content="#176b42">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Eetdagboek">
+
+    <title>Mijn eetdagboek</title>
+
+    <style>
+        :root {
+            color-scheme: light;
+
+            --achtergrond: #f2f6f3;
+            --kaart: #ffffff;
+            --tekst: #17241c;
+            --subtekst: #657269;
+            --groen: #176b42;
+            --groen-donker: #105332;
+            --groen-licht: #e6f3ea;
+            --rand: #cbd8cf;
+            --rood: #aa2b22;
+            --rood-licht: #fff0ef;
+            --blauw-licht: #edf5ff;
+            --blauw: #1e5fa7;
+            --schaduw: 0 4px 18px rgba(25, 59, 37, 0.07);
         }
-    ).format(new Date(x));
 
-}
-
-
-
-/* ALARM TEKST */
-
-function alarmText(m){
-
-    if(m === 60) return "1 uur";
-
-    if(m === 90) return "1,5 uur";
-
-    if(m === 120) return "2 uur";
-
-    return "geen";
-
-}
-
-
-
-/* MELDING */
-
-function show(t){
-
-    msg.textContent = t;
-
-    msg.classList.add("show");
-
-    setTimeout(
-        () => msg.classList.remove("show"),
-        3500
-    );
-
-}
-
-
-
-/* HTML VEILIG MAKEN */
-
-function esc(s){
-
-    const d = document.createElement("div");
-
-    d.textContent = s;
-
-    return d.innerHTML;
-
-}
-
-
-
-/* OVERZICHT TONEN */
-
-function render(){
-
-    count.textContent =
-        `${data.length} opgeslagen`;
-
-
-    if(!data.length){
-
-        list.innerHTML =
-            '<div class="empty">' +
-            'Nog niets opgeslagen.' +
-            '</div>';
-
-        return;
-
-    }
-
-
-    const gesorteerd =
-        data
-        .slice()
-        .sort(
-            (a,b) =>
-            b.eatenAt.localeCompare(a.eatenAt)
-        );
-
-
-    list.innerHTML =
-        gesorteerd
-        .map(x => `
-
-        <article class="entry">
-
-            <div class="top">
-
-                <h3>
-                    ${esc(x.kind)}
-                </h3>
-
-                <button
-                    class="delete"
-                    type="button"
-                    data-id="${x.id}">
-                    Verwijder
-                </button>
-
-            </div>
-
-            <div class="food">
-                ${esc(x.food)}
-            </div>
-
-            <div class="meta">
-
-                ${eatMomentNL(x.eatenAt)}
-
-                · alarm:
-                ${alarmText(x.alarmMinutes)}
-
-            </div>
-
-        </article>
-
-        `)
-        .join("");
-
-}
-
-
-
-/* ALARMKEUZE */
-
-document
-.querySelectorAll("[data-min]")
-.forEach(button => {
-
-    button.addEventListener(
-        "click",
-        () => {
-
-            alarm =
-                Number(button.dataset.min);
-
-
-            document
-            .querySelectorAll("[data-min]")
-            .forEach(x => {
-
-                x.classList.toggle(
-                    "on",
-                    x === button
-                );
-
-            });
-
+        * {
+            box-sizing: border-box;
         }
-    );
 
-});
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+
+            background: var(--achtergrond);
+            color: var(--tekst);
+        }
+
+        .app {
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+
+            padding:
+                calc(18px + env(safe-area-inset-top))
+                14px
+                calc(30px + env(safe-area-inset-bottom));
+        }
+
+        h1 {
+            margin: 5px 0 4px;
+            font-size: 31px;
+        }
+
+        .ondertitel {
+            margin: 0 0 18px;
+            color: var(--subtekst);
+        }
+
+        .kaart {
+            margin-bottom: 15px;
+            padding: 18px;
+
+            background: var(--kaart);
+            border-radius: 20px;
+            box-shadow: var(--schaduw);
+        }
+
+        h2 {
+            margin: 0 0 15px;
+            font-size: 21px;
+        }
+
+        label,
+        .label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: 700;
+        }
+
+        select,
+        textarea,
+        input {
+            width: 100%;
+            min-height: 46px;
+
+            padding: 12px 13px;
+
+            font: inherit;
+            color: var(--tekst);
+
+            background: var(--kaart);
+
+            border: 1px solid var(--rand);
+            border-radius: 12px;
+        }
+
+        textarea {
+            min-height: 96px;
+            resize: vertical;
+            line-height: 1.45;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus,
+        button:focus-visible {
+            outline: none;
+
+            border-color: var(--groen);
+
+            box-shadow:
+                0 0 0 3px rgba(23, 107, 66, 0.16);
+        }
+
+        .datum-tijd {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
 
+        .timer-keuzes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 7px;
+        }
 
+        .timer-knop {
+            min-height: 45px;
+            padding: 7px 5px;
 
-/* EETMOMENT OPSLAAN */
+            font: inherit;
+            font-weight: 650;
 
-form.addEventListener(
-"submit",
-e => {
+            color: var(--tekst);
+            background: #f7faf8;
 
-    e.preventDefault();
+            border: 1px solid var(--rand);
+            border-radius: 11px;
 
+            cursor: pointer;
+        }
 
-    const tekst =
-        food.value.trim();
+        .timer-knop.actief {
+            color: white;
+            background: var(--groen);
+            border-color: var(--groen);
+        }
 
+        .timer-info {
+            margin-top: 9px;
 
-    if(!tekst){
+            font-size: 13px;
+            line-height: 1.4;
 
-        show(
-            "Vul eerst in wat je hebt gegeten."
-        );
+            color: var(--subtekst);
+        }
 
-        return;
+        .opslaan {
+            width: 100%;
+            min-height: 50px;
 
-    }
+            margin-top: 19px;
+            padding: 13px;
 
+            font: inherit;
+            font-weight: 750;
+            font-size: 16px;
 
-    const gegeten =
-        new Date(
-            `${date.value}T${time.value}:00`
-        );
+            color: white;
+            background: var(--groen);
 
+            border: 0;
+            border-radius: 13px;
 
-    if(
-        Number.isNaN(
-            gegeten.getTime()
-        )
-    ){
+            cursor: pointer;
+        }
 
-        show(
-            "Kies een geldige datum en tijd."
-        );
+        .opslaan:active {
+            background: var(--groen-donker);
+        }
 
-        return;
+        .melding {
+            display: none;
 
-    }
+            margin-top: 12px;
+            padding: 11px 12px;
 
+            color: var(--groen-donker);
+            background: var(--groen-licht);
 
-    const nieuw = {
+            border-radius: 11px;
 
-        id:
-            crypto.randomUUID
-            ? crypto.randomUUID()
-            : Date.now().toString(),
+            line-height: 1.4;
+        }
 
-        kind:
-            kind.value,
+        .melding.zichtbaar {
+            display: block;
+        }
 
-        food:
-            tekst,
+        .kopregel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
 
-        eatenAt:
-            gegeten.toISOString(),
+        .aantal {
+            color: var(--subtekst);
+            font-size: 13px;
+        }
 
-        alarmMinutes:
-            alarm,
+        .daggroep {
+            margin-top: 15px;
+        }
 
-        savedAt:
-            new Date().toISOString()
+        .dagtitel {
+            margin: 0;
+            padding: 9px 11px;
 
-    };
+            color: var(--groen-donker);
+            background: var(--groen-licht);
 
+            border-radius: 10px;
 
-    data.push(nieuw);
+            font-size: 15px;
+            font-weight: 750;
+        }
 
+        .registratie {
+            padding: 14px 2px;
 
-    /* DAADWERKELIJK LOKAAL OPSLAAN */
+            border-bottom:
+                1px solid rgba(203, 216, 207, 0.7);
+        }
 
-    persist();
+        .registratie:last-child {
+            border-bottom: 0;
+        }
 
+        .registratie-kop {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
 
-    /* DIRECT OPNIEUW TONEN */
+        .registratie h3 {
+            margin: 0;
+            font-size: 17px;
+        }
 
-    render();
+        .eten {
+            margin: 7px 0;
 
-
-    /* FORMULIER RESETTEN */
-
-    food.value = "";
-
-    alarm = 0;
-
-
-    document
-    .querySelectorAll("[data-min]")
-    .forEach(x => {
-
-        x.classList.toggle(
-            "on",
-            x.dataset.min === "0"
-        );
-
-    });
-
-
-    resetDateTime();
-
-
-    show(
-        "Eetmoment is opgeslagen."
-    );
-
-});
-
-
-
-/* VERWIJDEREN */
-
-list.addEventListener(
-"click",
-e => {
-
-    const knop =
-        e.target.closest("[data-id]");
-
-
-    if(!knop) return;
-
-
-    data =
-        data.filter(
-            x =>
-            x.id !== knop.dataset.id
-        );
-
-
-    persist();
-
-    render();
-
-});
-
-
-
-/* ALLES WISSEN */
-
-$("#clear")
-.addEventListener(
-"click",
-() => {
-
-    if(
-        data.length &&
-        confirm(
-            "Alle opgeslagen eetmomenten wissen?"
-        )
-    ){
-
-        data = [];
-
-        persist();
-
-        render();
-
-    }
-
-});
-
-
-
-/* BACK-UP DOWNLOADEN */
-
-$("#export")
-.addEventListener(
-"click",
-() => {
-
-    if(!data.length){
-
-        show(
-            "Er zijn nog geen gegevens om te exporteren."
-        );
-
-        return;
-
-    }
-
-
-    const blob =
-        new Blob(
-            [
-                JSON.stringify(
-                    data,
-                    null,
-                    2
-                )
-            ],
-            {
-                type:"application/json"
-            }
-        );
-
-
-    const a =
-        document.createElement("a");
-
-
-    a.href =
-        URL.createObjectURL(blob);
-
-
-    a.download =
-        `eetdagboek-backup-${localDate(new Date())}.json`;
-
-
-    a.click();
-
-
-    setTimeout(
-        () => URL.revokeObjectURL(a.href),
-        1000
-    );
-
-});
-
-
-/* APP START */
-
-resetDateTime();
-
-render();
-
-
-})();
-
-</script>
-
-</body>
-</html>
+            white-space: pre-wrap;
+            overflow-wrap: anywhere
